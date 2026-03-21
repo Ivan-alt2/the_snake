@@ -40,20 +40,70 @@ clock = pygame.time.Clock()
 
 
 # Тут опишите все классы игры.
-...
+class Snake:
+    def init(self):
+        self.length = 1
+        self.direction = RIGHT
+        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]  # Старт в центре поля
 
+    # Тут опишите логику движения, поедания яблок и столкновений
+    def move(self):
+        # Логика движения змейки
+        pass
 
+    def draw(self, screen):
+        # Отрисовка змейки
+        for pos in self.positions:
+            rect = pygame.Rect(pos * GRID_SIZE, pos * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+            pygame.draw.rect(screen, SNAKE_COLOR, rect)
+            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)  # Контур ячейки
+
+# Пример класса для яблока (дополните по необходимости)
+class Apple:
+    def init(self):
+        self.position = (randint(0, GRID_WIDTH - 1), randint(0, GRID_HEIGHT - 1))
+
+    def draw(self, screen):
+        pos = self.position
+        rect = pygame.Rect(pos * GRID_SIZE, pos * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+        pygame.draw.rect(screen, APPLE_COLOR, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+# Основная функция игры
 def main():
-    # Инициализация PyGame:
     pygame.init()
-    # Тут нужно создать экземпляры классов.
-    ...
+    snake = Snake()
+    apple = Apple()
+    running = True
 
-    # while True:
-    #     clock.tick(SPEED)
+    while running:
+        screen.fill(BOARD_BACKGROUND_COLOR)  # Очищаем экран
 
-        # Тут опишите основную логику игры.
-        # ...
+        # Обработка событий (клавиши, закрытие окна)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP and snake.direction != DOWN:
+                    snake.direction = UP
+                elif event.key == pygame.K_DOWN and snake.direction != UP:
+                    snake.direction = DOWN
+                elif event.key == pygame.K_LEFT and snake.direction != RIGHT:
+                    snake.direction = LEFT
+                elif event.key == pygame.K_RIGHT and snake.direction != LEFT:
+                    snake.direction = RIGHT
+
+        # Логика игры (движение, столкновения, поедание яблок)
+        snake.move()
+
+        # Отрисовка объектов
+        snake.draw(screen)
+        apple.draw(screen)
+
+        pygame.display.flip()  # Обновляем экран
+        clock.tick(SPEED)  # Ограничиваем FPS
+
+    pygame.quit()
 
 
 if __name__ == '__main__':
