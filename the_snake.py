@@ -1,6 +1,5 @@
-import pygame
-
 from random import randint, choice
+import pygame
 
 
 # Константы для размеров поля и сетки
