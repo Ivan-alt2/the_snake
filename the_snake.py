@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import randint, choice
 
 import pygame
 
@@ -48,11 +48,9 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс для игровых объектов."""
 
-    def __init__(
-        self,
-        position: tuple = CENTER_OF_SCREEN,
-        body_color: tuple | None = None
-    ) -> None:
+    def __init__(self, position=None, body_color=None):
+        if position is None:
+            position = CENTER_OF_SCREEN
         self.position = position
         self.body_color = body_color
 
@@ -70,10 +68,13 @@ class GameObject:
 class Apple(GameObject):
     """Класс для яблока в игре 'Змейка'."""
 
-    def __init__(self, snake_positions: list[tuple[int, int]] = [CENTER_OF_SCREEN]) -> None:
-        super().__init__(body_color=APPLE_COLOR)
+    def __init__(self, snake_positions=None):
+        super().__init__()
+        self.body_color = APPLE_COLOR
+        if snake_positions is None:
+            snake_positions = []
         self.randomize_position(snake_positions)
-        
+
     def randomize_position(self, snake_positions):
         """Определяет случайную позицию для яблока на игровом поле."""
         while True:
@@ -83,62 +84,69 @@ class Apple(GameObject):
                 self.position = new_position
                 break
 
-    def draw(self) -> None:
-    """Отрисовывает яблоко на экране."""
-    self.draw_rect(self.position, self.body_color)
+    def draw(self):
+        """Отрисовывает яблоко и лист на экране."""
+        self.draw_rect(self.position, self.body_color)
+        # Отрисовка листа
+        leaf_position = (self.position[0] + 10, self.position[1] + 1)
+        leaf_size = (GRID_SIZE // 4, GRID_SIZE // 2)
+        leaf_rect = pygame.Rect(leaf_position, leaf_size)
+        pygame.draw.ellipse(screen, LEAF_COLOR, leaf_rect)
 
 
 class Snake(GameObject):
-    """Змейка в игре."""
+    """Класс, представляющий змейку в игре."""
 
-    def __init__(
-        self,
-        length: int = 1,
-        direction: tuple[int, int] = RIGHT,
-        body_color: tuple[int, int] = SNAKE_COLOR
-    ) -> None:
+    def __init__(self, length=1, direction=RIGHT,
+                 next_direction=None, body_color=SNAKE_COLOR):
         self.length = length
-        self.body_color = body_color
-        self.reset()
-        self.direction = direction
-
-    def reset(self) -> None:
-        """Сбрасывает змейку в начальное состояние."""
         self.positions = [CENTER_OF_SCREEN]
         self.position = self.positions[0]
-        self.next_direction = None
-        self.last = None
+        self.direction = direction
+        self.next_direction = next_direction
+        self.body_color = body_color
 
+    def update_direction(self):
+        """Обновляет направление движения змейки."""
+        if self.next_direction:
+            self.direction = self.next_direction
+            self.next_direction = None
 
-    def move(self) -> None:
-    """Перемещает змейку на один сегмент в текущем направлении."""
-    head_position = self.get_head_position()
-    head_x, head_y = head_position
+    def move(self):
+        """Перемещает змейку на один сегмент в текущем направлении."""
+        # Получаем текущую голову змейки
+        cur_head_pos = self.positions[0]
+        x, y = cur_head_pos
+        # Определяем новую позицию головы в зависимости от направления
+        if self.direction == UP:
+            new_head_pos = (x, (y - GRID_SIZE) % SCREEN_HEIGHT)
+        elif self.direction == DOWN:
+            new_head_pos = (x, (y + GRID_SIZE) % SCREEN_HEIGHT)
+        elif self.direction == LEFT:
+            new_head_pos = ((x - GRID_SIZE) % SCREEN_WIDTH, y)
+        elif self.direction == RIGHT:
+            new_head_pos = ((x + GRID_SIZE) % SCREEN_WIDTH, y)
 
-    direction_x, direction_y = self.direction
+        # Вставляем новую позицию головы в начало списка positions
+        self.positions.insert(0, new_head_pos)
 
-    new_head_x = (head_x + direction_x * GRID_SIZE) % SCREEN_WIDTH
-    new_head_y = (head_y + direction_y * GRID_SIZE) % SCREEN_HEIGHT
-    new_head_position = (new_head_x, new_head_y)
+        # Удаляем последний элемент списка, чтобы змейка двигалась
+        if len(self.positions) > self.length:
+            self.last = self.positions[-1]
+            self.positions.pop()
 
-    self.positions.insert(0, new_head_position)
-
-    if len(self.positions) > self.length:
-        self.last = self.positions[-1]
-        self.positions.pop()
-
-    def get_head_position(self) -> tuple[int, int]:
+    def get_head_position(self):
         """Возвращает текущую позицию головы змейки."""
         return self.positions[0]
 
-
-    def reset(self) -> None:
+    def reset(self):
         """Сбрасывает змейку в начальное состояние."""
+        screen.fill(BOARD_BACKGROUND_COLOR)
         self.length = 1
         self.positions = [CENTER_OF_SCREEN]
         self.direction = RIGHT
         self.next_direction = None
-        self.last = None
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
 
     def draw(self):
         """Отрисовывает змейку на экране."""
