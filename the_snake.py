@@ -1,8 +1,6 @@
-from random import randint
-
 import pygame
-
-from typing import Optional, Tuple, List
+from random import randint
+from typing import List, Optional, Tuple
 
 # Инициализация PyGame:
 pygame.init()
