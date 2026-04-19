@@ -56,17 +56,19 @@ class GameObject:
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
-    def __init__(self, snake_positions=None):  # Изменение здесь
+    def __init__(self, snake_positions=None):
         super().__init__(body_color=APPLE_COLOR)
-        if snake_positions is None:  # Установка значения по умолчанию
-            snake_positions = []  # Или любое другое значение по умолчанию
+        if snake_positions is None:
+            snake_positions = []
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
         """Определяет случайную позицию для яблока на игровом поле."""
         while True:
-            new_position = (randint(0, GRID_WIDTH - 1) * GRID_SIZE,
-                            randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
+            new_position = (
+                randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+                randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+            )
             if new_position not in snake_positions:
                 self.position = new_position
                 break
@@ -91,14 +93,11 @@ class Snake(GameObject):
         cur_head_pos = self.get_head_position()
         x, y = cur_head_pos
 
-        # Определяем новую позицию головы в зависимости от направления
         new_head_pos = (x + self.direction[0] * GRID_SIZE,
                         y + self.direction[1] * GRID_SIZE)
 
-        # Вставляем новую позицию головы в начало списка positions
         self.positions.insert(0, new_head_pos)
 
-        # Удаляем последний элемент списка, чтобы змейка двигалась
         if len(self.positions) > self.length:
             self.last = self.positions.pop()
 
@@ -117,9 +116,10 @@ class Snake(GameObject):
         for position in self.positions:
             self.draw_rect(position, self.body_color)
 
-    def update_direction(self, new_direction):  # Проверка на наличие этого метода
+    def update_direction(self, new_direction):
         """Обновляет направление змейки."""
-        if (new_direction[0] + self.direction[0] != 0) or (new_direction[1] + self.direction[1] != 0):
+        if (new_direction[0] + self.direction[0] != 0) or \
+           (new_direction[1] + self.direction[1] != 0):
             self.direction = new_direction
 
 
@@ -138,9 +138,8 @@ def handle_keys(snake):
             }
             if event.key in direction_map:
                 new_direction = direction_map[event.key]
-                # Проверяем направление, чтобы не разворачиваться
                 if (new_direction[0] + snake.direction[0] != 0) or \
-                        (new_direction[1] + snake.direction[1] != 0):
+                   (new_direction[1] + snake.direction[1] != 0):
                     snake.direction = new_direction
 
 
