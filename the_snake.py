@@ -1,4 +1,5 @@
 from random import randint
+
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -25,6 +26,7 @@ SNAKE_COLOR = (0, 255, 0)
 # Скорость движения змейки:
 SPEED = 20
 
+
 class GameObject:
     """Игровой объект."""
 
@@ -41,6 +43,7 @@ class GameObject:
         rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(surface, color, rect)
         pygame.draw.rect(surface, border_color, rect, 1)
+
 
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
@@ -65,6 +68,7 @@ class Apple(GameObject):
     def draw(self, surface):
         """Отрисовывает яблоко на экране."""
         self.draw_rect(surface, self.position, self.body_color)
+
 
 class Snake(GameObject):
     """Змейка в игре."""
@@ -119,6 +123,7 @@ class Snake(GameObject):
         for position in self.positions:
             self.draw_rect(surface, position, self.body_color)
 
+
 def handle_keys(snake):
     """Обрабатывает нажатия клавиш."""
     for event in pygame.event.get():
@@ -135,6 +140,7 @@ def handle_keys(snake):
             if event.key in direction_map:
                 new_direction = direction_map[event.key]
                 snake.update_direction(new_direction)
+
 
 def main():
     """Основная функция, инициализирующая игру и управляющая игровым циклом."""
@@ -167,6 +173,7 @@ def main():
         apple.draw(screen)
         snake.draw(screen)
         pygame.display.update()
+
 
 if __name__ == '__main__':
     main()
