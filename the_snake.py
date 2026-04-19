@@ -115,6 +115,7 @@ class Snake(GameObject):
         for position in self.positions:
             self.draw_rect(position, self.body_color)
 
+
 def handle_keys(snake):
     """Обрабатывает нажатия клавиш."""
     for event in pygame.event.get():
@@ -134,6 +135,7 @@ def handle_keys(snake):
                 if (new_direction[0] + snake.direction[0] != 0) or \
                         (new_direction[1] + snake.direction[1] != 0):
                     snake.direction = new_direction
+
 
 def main():
     """Основная функция, инициализирующая игру и управляющая игровым циклом."""
