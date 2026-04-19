@@ -1,5 +1,4 @@
 from random import randint
-
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -56,8 +55,10 @@ class GameObject:
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
-    def __init__(self, snake_positions):
+    def __init__(self, snake_positions=None):  # Изменение здесь
         super().__init__(body_color=APPLE_COLOR)
+        if snake_positions is None:  # Установка значения по умолчанию
+            snake_positions = []  # Или любое другое значение по умолчанию
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
@@ -114,6 +115,11 @@ class Snake(GameObject):
         """Отрисовывает змейку на экране."""
         for position in self.positions:
             self.draw_rect(position, self.body_color)
+
+    def update_direction(self, new_direction):  # Проверка на наличие этого метода
+        """Обновляет направление змейки."""
+        if (new_direction[0] + self.direction[0] != 0) or (new_direction[1] + self.direction[1] != 0):
+            self.direction = new_direction
 
 
 def handle_keys(snake):
