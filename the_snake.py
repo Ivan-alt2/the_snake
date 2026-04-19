@@ -36,7 +36,6 @@ clock = pygame.time.Clock()
 
 class GameObject:
     """Игровой объект."""
-
     def __init__(self, position=CENTER_OF_SCREEN, body_color=None):
         self.position = position
         self.body_color = body_color
@@ -53,7 +52,6 @@ class GameObject:
 
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
-
     def __init__(self, snake_positions):
         super().__init__(body_color=APPLE_COLOR)
         self.randomize_position(snake_positions)
@@ -73,7 +71,6 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Змейка в игре."""
-
     def __init__(self, length=1, direction=RIGHT, body_color=SNAKE_COLOR):
         super().__init__(body_color=body_color)
         self.length = length
