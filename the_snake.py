@@ -34,6 +34,7 @@ pygame.display.set_caption('Змейка')
 # Настройка времени:
 clock = pygame.time.Clock()
 
+
 class GameObject:
     """Игровой объект."""
 
@@ -50,6 +51,7 @@ class GameObject:
         rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, color, rect)
         pygame.draw.rect(screen, border_color, rect, 1)
+
 
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
@@ -70,6 +72,7 @@ class Apple(GameObject):
     def draw(self):
         """Отрисовывает яблоко на экране."""
         self.draw_rect(self.position, self.body_color)
+
 
 class Snake(GameObject):
     """Змейка в игре."""
