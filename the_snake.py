@@ -2,36 +2,36 @@ from random import randint
 
 import pygame
 
-# Константы для размеров поля и сетки: 
+# Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
-# Центр экрана 
+# Центр экрана
 CENTER_OF_SCREEN = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
-# Направления движения: 
+# Направления движения:
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвета 
+# Цвета
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 BORDER_COLOR = (93, 216, 228)
 APPLE_COLOR = (255, 0, 0)
 LEAF_COLOR = (0, 128, 0)
 SNAKE_COLOR = (0, 255, 0)
 
-# Скорость движения змейки: 
+# Скорость движения змейки:
 SPEED = 20
 
-# Настройка игрового окна: 
+# Настройка игрового окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 pygame.display.set_caption('Змейка')
 
-# Настройка времени: 
+# Настройка времени:
 clock = pygame.time.Clock()
 
 class GameObject:
@@ -128,7 +128,8 @@ def handle_keys(snake):
             if event.key in direction_map:
                 new_direction = direction_map[event.key]
                 # Проверяем направление, чтобы не разворачиваться
-                if (new_direction[0] + snake.direction[0] != 0) or (new_direction[1] + snake.direction[1] != 0):
+                if (new_direction[0] + snake.direction[0] != 0) or \
+                        (new_direction[1] + snake.direction[1] != 0):
                     snake.direction = new_direction
 
 def main():
