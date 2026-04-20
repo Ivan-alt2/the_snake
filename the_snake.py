@@ -162,7 +162,7 @@ def main():
         if head_position in snake.positions[1:]:
             snake.reset()
 
-        screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем экран только при новой игре или столкновении
+        screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
         snake.draw()
         pygame.display.update()
