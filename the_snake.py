@@ -1,5 +1,4 @@
 from random import choice, randint
-
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -64,8 +63,11 @@ class GameObject:
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
-    def __init__(self, snake_positions):
+    def __init__(self, snake_positions=None):
         super().__init__(body_color=APPLE_COLOR)
+        # Если snake_positions не передан, использовать пустой список
+        if snake_positions is None:
+            snake_positions = []
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
@@ -91,8 +93,7 @@ class Snake(GameObject):
         super().__init__(body_color=body_color)
         self.length = length
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = direction if direction else choice(
-            [UP, DOWN, LEFT, RIGHT])
+        self.direction = direction if direction else choice([UP, DOWN, LEFT, RIGHT])
         self.last = None
 
     def move(self):
@@ -116,8 +117,7 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние."""
         self.length = 1
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = choice(
-            [UP, DOWN, LEFT, RIGHT])  # Случайное направление
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])  # Случайное направление
 
     def draw(self):
         """Отрисовывает змейку на экране."""
@@ -147,7 +147,7 @@ def main():
     """Основная функция, инициализирующая игру и управляющая игровым циклом."""
     pygame.init()
     snake = Snake()
-    apple = Apple(snake.positions)
+    apple = Apple(snake.positions)  # Передайте начальную позицию змейки
 
     while True:
         clock.tick(SPEED)
