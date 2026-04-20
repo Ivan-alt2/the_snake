@@ -94,7 +94,8 @@ class Snake(GameObject):
         super().__init__(body_color=body_color)
         self.length = length
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = direction if direction else choice([UP, DOWN, LEFT, RIGHT])
+        self.direction = direction if direction else choice(
+            [UP, DOWN, LEFT, RIGHT])
         self.last = None
 
     def move(self):
@@ -118,7 +119,7 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние."""
         self.length = 1
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = choice([UP, DOWN, LEFT, RIGHT])  # Случайное направление
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
 
     def draw(self):
         """Отрисовывает змейку на экране."""
