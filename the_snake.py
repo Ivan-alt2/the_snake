@@ -99,8 +99,10 @@ class Snake(GameObject):
         cur_head_pos = self.get_head_position()
         x, y = cur_head_pos
 
-        new_head_pos = (x + self.direction[0] * GRID_SIZE,
-                        y + self.direction[1] * GRID_SIZE)
+        new_head_pos = (
+            x + self.direction[0] * GRID_SIZE,
+            y + self.direction[1] * GRID_SIZE
+        )
 
         self.positions.insert(0, new_head_pos)
 
