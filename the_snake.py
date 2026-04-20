@@ -1,4 +1,4 @@
-from random import randint
+from random import choice, randint
 
 import pygame
 
@@ -34,6 +34,14 @@ pygame.display.set_caption('Змейка')
 # Настройка времени:
 clock = pygame.time.Clock()
 
+# Словарь направлений
+DIRECTION_MAP = {
+    pygame.K_UP: UP,
+    pygame.K_DOWN: DOWN,
+    pygame.K_LEFT: LEFT,
+    pygame.K_RIGHT: RIGHT
+}
+
 
 class GameObject:
     """Игровой объект."""
@@ -56,10 +64,8 @@ class GameObject:
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
-    def __init__(self, snake_positions=None):
+    def __init__(self, snake_positions):
         super().__init__(body_color=APPLE_COLOR)
-        if snake_positions is None:
-            snake_positions = []
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
@@ -81,11 +87,11 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Змейка в игре."""
 
-    def __init__(self, length=1, direction=RIGHT, body_color=SNAKE_COLOR):
+    def __init__(self, length=1, direction=None, body_color=SNAKE_COLOR):
         super().__init__(body_color=body_color)
         self.length = length
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = direction
+        self.direction = direction if direction else choice([UP, DOWN, LEFT, RIGHT])
         self.last = None
 
     def move(self):
@@ -109,7 +115,7 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние."""
         self.length = 1
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = RIGHT
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])  # Случайное направление
 
     def draw(self):
         """Отрисовывает змейку на экране."""
@@ -130,17 +136,9 @@ def handle_keys(snake):
             pygame.quit()
             raise SystemExit
         elif event.type == pygame.KEYDOWN:
-            direction_map = {
-                pygame.K_UP: UP,
-                pygame.K_DOWN: DOWN,
-                pygame.K_LEFT: LEFT,
-                pygame.K_RIGHT: RIGHT
-            }
-            if event.key in direction_map:
-                new_direction = direction_map[event.key]
-                if (new_direction[0] + snake.direction[0] != 0) or \
-                   (new_direction[1] + snake.direction[1] != 0):
-                    snake.direction = new_direction
+            new_direction = DIRECTION_MAP.get(event.key)
+            if new_direction:
+                snake.update_direction(new_direction)
 
 
 def main():
@@ -162,7 +160,7 @@ def main():
         if head_position in snake.positions[1:]:
             snake.reset()
 
-        screen.fill(BOARD_BACKGROUND_COLOR)
+        screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем экран только при новой игре или столкновении
         apple.draw()
         snake.draw()
         pygame.display.update()
