@@ -167,21 +167,21 @@ def main():
         if snake.length > 1 and head_position in snake.positions[1:]:
             game_over = True
 
-         # Столкновение с границами экрана
-         if (head_position[0] < 0 or head_position[0] >= SCREEN_WIDTH or 
-             head_position[1] < 0 or head_position[1] >= SCREEN_HEIGHT):
-             game_over = True
+        # Столкновение с границами экрана
+        if (head_position[0] < 0 or head_position[0] >= SCREEN_WIDTH or 
+            head_position[1] < 0 or head_position[1] >= SCREEN_HEIGHT):
+            game_over = True
 
-         if game_over:
-             screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше.
-             snake.reset()
-             apple.randomize_position(snake.positions)
-             continue  # Пропускаем отрисовку текущего кадра и начинаем новый цикл
+        if game_over:
+            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше.
+            snake.reset()
+            apple.randomize_position(snake.positions)
+            continue  # Пропускаем отрисовку текущего кадра и начинаем новый цикл
 
 
-         screen.fill(BOARD_BACKGROUND_COLOR)  # ← ОШИБКА: отступ как у блока if, но вне его
-         apple.draw()
-         pygame.display.update()
+        screen.fill(BOARD_BACKGROUND_COLOR)  # ← ОШИБКА: отступ как у блока if, но вне его
+        apple.draw()
+        pygame.display.update()
 
 
 if __name__ == '__main__':
