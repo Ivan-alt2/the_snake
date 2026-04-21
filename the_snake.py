@@ -63,8 +63,14 @@ class GameObject:
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
-    def __init__(self, snake_positions):
+    def __init__(self, snake_positions=None):
+        """
+        Инициализация яблока.
+        :param snake_positions: список позиций змейки (нужен для генерации).
+        """
         super().__init__(body_color=APPLE_COLOR)
+        if snake_positions is None:
+            snake_positions = []
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
@@ -135,8 +141,7 @@ def handle_keys(snake):
             pygame.quit()
             raise SystemExit
         elif event.type == pygame.KEYDOWN:
-            # Используем текущее направление как значение по умолчанию,
-            # чтобы избежать лишних проверок.
+            # Используем текущее направление как значение по умолчанию.
             new_direction = DIRECTION_MAP.get(event.key, snake.direction)
             snake.update_direction(new_direction)
 
@@ -145,7 +150,7 @@ def main():
     """Основная функция, инициализирующая игру и управляющая игровым циклом."""
     pygame.init()
     snake = Snake()
-    apple = Apple(snake.positions)  # Передаём начальную позицию змейки
+    apple = Apple(snake.positions) # Передаём начальную позицию змейки
 
     while True:
         clock.tick(SPEED)
@@ -153,20 +158,34 @@ def main():
         snake.move()
 
         head_position = snake.get_head_position()
+
+        # Проверка поедания яблока
         if head_position == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-        # Проверка столкновения с собой: только если длина > 1 и голова в теле.
+        # Проверка столкновения с собой или границами (границы можно добавить по желанию)
+        game_over = False
+        
+        # Столкновение с телом (только если длина > 1)
         if snake.length > 1 and head_position in snake.positions[1:]:
-            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем при проигрыше.
-            snake.reset()
-            apple.randomize_position(snake.positions)
+            game_over = True
 
-        screen.fill(BOARD_BACKGROUND_COLOR)  # Очистка экрана каждый кадр.
-        apple.draw()
-        snake.draw()
-        pygame.display.update()
+         # Столкновение с границами экрана (опционально, но часто используется)
+         if (head_position[0] < 0 or head_position[0] >= SCREEN_WIDTH or 
+             head_position[1] < 0 or head_position[1] >= SCREEN_HEIGHT):
+             game_over = True
+
+         if game_over:
+             screen.fill(BOARD_BACKGROUND_COLOR) # Закрашиваем доску при проигрыше.
+             snake.reset()
+             apple.randomize_position(snake.positions)
+             continue # Пропускаем отрисовку текущего кадра и начинаем новый цикл
+
+         screen.fill(BOARD_BACKGROUND_COLOR) # Очистка экрана каждый кадр.
+         apple.draw()
+         snake.draw()
+         pygame.display.update()
 
 
 if __name__ == '__main__':
