@@ -94,8 +94,7 @@ class Snake(GameObject):
         super().__init__(body_color=body_color)
         self.length = length
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = direction if direction else choice(
-            [UP, DOWN, LEFT, RIGHT])
+        self.direction = direction if direction else choice([UP, DOWN, LEFT, RIGHT])
         self.last = None
 
     def move(self):
@@ -119,7 +118,7 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние."""
         self.length = 1
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = choice([UP, DOWN, LEFT, RIGHT])
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])  # Случайное направление
 
     def draw(self):
         """Отрисовывает змейку на экране."""
@@ -164,7 +163,7 @@ def main():
         if head_position in snake.positions[1:]:
             snake.reset()
 
-        screen.fill(BOARD_BACKGROUND_COLOR)
+        screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем экран только при новой игре или столкновении
         apple.draw()
         snake.draw()
         pygame.display.update()
