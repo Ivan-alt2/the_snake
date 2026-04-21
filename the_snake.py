@@ -64,7 +64,10 @@ class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
     def __init__(self, snake_positions=None):
-      
+        """
+        Инициализация яблока.
+        :param snake_positions: список позиций змейки (нужен для генерации).
+        """
         super().__init__(body_color=APPLE_COLOR)
         if snake_positions is None:
             snake_positions = []
@@ -92,6 +95,7 @@ class Snake(GameObject):
     def __init__(self):
         super().__init__(body_color=SNAKE_COLOR)
         self.reset()
+        # По ТЗ при старте игры Змейка должна всегда двигаться направо.
         self.direction = RIGHT
 
     def move(self):
@@ -155,33 +159,33 @@ def main():
 
         head_position = snake.get_head_position()
 
-        # Проверка поедания яблока
-        if head_position == apple.position:
-            snake.length += 1
-            apple.randomize_position(snake.positions)
+         # Проверка поедания яблока
+         if head_position == apple.position:
+             snake.length += 1
+             apple.randomize_position(snake.positions)
 
-        # Проверка столкновения с собой или границами
-        game_over = False
-        
-        # Столкновение с телом
-        if snake.length > 1 and head_position in snake.positions[1:]:
-            game_over = True
+         # Проверка столкновения с собой или границами экрана.
+         # Игра заканчивается при касании стен или собственного тела.
+         is_out_of_bounds = (
+             head_position[0] < 0 or head_position[0] >= SCREEN_WIDTH or
+             head_position[1] < 0 or head_position[1] >= SCREEN_HEIGHT
+         )
+         is_self_collision = snake.length > 1 and head_position in snake.positions[1:]
 
-        # Столкновение с границами экрана
-        if (head_position[0] < 0 or head_position[0] >= SCREEN_WIDTH or 
-            head_position[1] < 0 or head_position[1] >= SCREEN_HEIGHT):
-            game_over = True
+         if is_out_of_bounds or is_self_collision:
+             # Сброс игры при проигрыше.
+             snake.reset()
+             apple.randomize_position(snake.positions)
+             # Очистка экрана после проигрыша.
+             screen.fill(BOARD_BACKGROUND_COLOR)
+             pygame.display.update()
+             continue # Перезапуск цикла без отрисовки в этом кадре
 
-        if game_over:
-            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше.
-            snake.reset()
-            apple.randomize_position(snake.positions)
-            continue  # Пропускаем отрисовку текущего кадра и начинаем новый цикл
-
-
-        screen.fill(BOARD_BACKGROUND_COLOR)  # ← ОШИБКА: отступ как у блока if, но вне его
-        apple.draw()
-        pygame.display.update()
+         # --- Основной игровой цикл (отрисовка) ---
+         screen.fill(BOARD_BACKGROUND_COLOR) # Очистка экрана каждый кадр.
+         apple.draw()
+         snake.draw()
+         pygame.display.update()
 
 
 if __name__ == '__main__':
