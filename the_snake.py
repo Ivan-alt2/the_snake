@@ -173,14 +173,14 @@ def main():
              game_over = True
 
          if game_over:
-             screen.fill(BOARD_BACKGROUND_COLOR) # Закрашиваем доску при проигрыше.
+             screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше.
              snake.reset()
              apple.randomize_position(snake.positions)
-             continue # Пропускаем отрисовку текущего кадра и начинаем новый цикл
+             continue  # Пропускаем отрисовку текущего кадра и начинаем новый цикл
 
-         screen.fill(BOARD_BACKGROUND_COLOR) # Очистка экрана каждый кадр.
+
+         screen.fill(BOARD_BACKGROUND_COLOR)  # ← ОШИБКА: отступ как у блока if, но вне его
          apple.draw()
-         snake.draw()
          pygame.display.update()
 
 
