@@ -2,7 +2,7 @@ from random import choice, randint
 
 import pygame
 
-# Константы для размеров поля и сетки:
+# Константы для размеров поля и сетки
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
@@ -11,7 +11,7 @@ GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 # Центр экрана
 CENTER_OF_SCREEN = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
-# Направления движения:
+# Направления движения
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
@@ -21,17 +21,16 @@ RIGHT = (1, 0)
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
 BORDER_COLOR = (93, 216, 228)
 APPLE_COLOR = (255, 0, 0)
-LEAF_COLOR = (0, 128, 0)
 SNAKE_COLOR = (0, 255, 0)
 
-# Скорость движения змейки:
+# Скорость движения змейки
 SPEED = 20
 
-# Настройка игрового окна:
+# Настройка игрового окна
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 pygame.display.set_caption('Змейка')
 
-# Настройка времени:
+# Настройка времени
 clock = pygame.time.Clock()
 
 # Словарь направлений
@@ -45,7 +44,6 @@ DIRECTION_MAP = {
 
 class GameObject:
     """Игровой объект."""
-
     def __init__(self, position=CENTER_OF_SCREEN, body_color=None):
         self.position = position
         self.body_color = body_color
@@ -63,12 +61,8 @@ class GameObject:
 
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
-
-    def __init__(self, snake_positions=None):
+    def __init__(self, snake_positions):
         super().__init__(body_color=APPLE_COLOR)
-        # Если snake_positions не передан, использовать пустой список
-        if snake_positions is None:
-            snake_positions = []
         self.randomize_position(snake_positions)
 
     def randomize_position(self, snake_positions):
@@ -89,21 +83,21 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Змейка в игре."""
-
-    def __init__(self, length=1, direction=None, body_color=SNAKE_COLOR):
-        super().__init__(body_color=body_color)
-        self.length = length
-        self.positions = [CENTER_OF_SCREEN]
-        self.direction = direction if direction else choice([UP, DOWN, LEFT, RIGHT])
-        self.last = None
+    def __init__(self):
+        super().__init__(body_color=SNAKE_COLOR)
+        self.reset()
+        # По ТЗ при старте игры Змейка должна всегда двигаться направо.
+        self.direction = RIGHT
 
     def move(self):
         """Перемещает змейку на один сегмент в текущем направлении."""
         cur_head_pos = self.get_head_position()
         x, y = cur_head_pos
 
-        new_head_pos = (x + self.direction[0] * GRID_SIZE,
-                        y + self.direction[1] * GRID_SIZE)
+        new_head_pos = (
+            x + self.direction[0] * GRID_SIZE,
+            y + self.direction[1] * GRID_SIZE
+        )
 
         self.positions.insert(0, new_head_pos)
 
@@ -118,7 +112,6 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние."""
         self.length = 1
         self.positions = [CENTER_OF_SCREEN]
-        self.direction = choice([UP, DOWN, LEFT, RIGHT])  # Случайное направление
 
     def draw(self):
         """Отрисовывает змейку на экране."""
@@ -139,16 +132,15 @@ def handle_keys(snake):
             pygame.quit()
             raise SystemExit
         elif event.type == pygame.KEYDOWN:
-            new_direction = DIRECTION_MAP.get(event.key)
-            if new_direction:
-                snake.update_direction(new_direction)
+            new_direction = DIRECTION_MAP.get(event.key, snake.direction)
+            snake.update_direction(new_direction)
 
 
 def main():
     """Основная функция, инициализирующая игру и управляющая игровым циклом."""
     pygame.init()
     snake = Snake()
-    apple = Apple(snake.positions)  # Передайте начальную позицию змейки
+    apple = Apple(snake.positions)  # Передаём начальную позицию змейки
 
     while True:
         clock.tick(SPEED)
@@ -160,10 +152,13 @@ def main():
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-        if head_position in snake.positions[1:]:
+        # Проверка столкновения с собой: только если длина > 1 и голова в теле
+        if snake.length > 1 and head_position in snake.positions[1:]:
+            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше
             snake.reset()
+            apple.randomize_position(snake.positions)
 
-        screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем экран только при новой игре или столкновении
+        screen.fill(BOARD_BACKGROUND_COLOR)  # Очистка экрана каждый кадр
         apple.draw()
         snake.draw()
         pygame.display.update()
