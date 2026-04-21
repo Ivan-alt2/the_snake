@@ -159,7 +159,7 @@ def main():
 
         # Проверка столкновения с собой: только если длина > 1 и голова в теле.
         if snake.length > 1 and head_position in snake.positions[1:]:
-            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше.
+            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем при проигрыше.
             snake.reset()
             apple.randomize_position(snake.positions)
 
