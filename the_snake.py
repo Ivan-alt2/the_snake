@@ -64,10 +64,7 @@ class Apple(GameObject):
     """Предмет, который змейка может съесть."""
 
     def __init__(self, snake_positions=None):
-        """
-        Инициализация яблока.
-        :param snake_positions: список позиций змейки (нужен для генерации).
-        """
+      
         super().__init__(body_color=APPLE_COLOR)
         if snake_positions is None:
             snake_positions = []
@@ -95,7 +92,6 @@ class Snake(GameObject):
     def __init__(self):
         super().__init__(body_color=SNAKE_COLOR)
         self.reset()
-        # По ТЗ при старте игры Змейка должна всегда двигаться направо.
         self.direction = RIGHT
 
     def move(self):
@@ -164,14 +160,14 @@ def main():
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-        # Проверка столкновения с собой или границами (границы можно добавить по желанию)
+        # Проверка столкновения с собой или границами
         game_over = False
         
-        # Столкновение с телом (только если длина > 1)
+        # Столкновение с телом
         if snake.length > 1 and head_position in snake.positions[1:]:
             game_over = True
 
-         # Столкновение с границами экрана (опционально, но часто используется)
+         # Столкновение с границами экрана
          if (head_position[0] < 0 or head_position[0] >= SCREEN_WIDTH or 
              head_position[1] < 0 or head_position[1] >= SCREEN_HEIGHT):
              game_over = True
