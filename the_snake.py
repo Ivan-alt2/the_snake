@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import randint
 
 import pygame
 
@@ -44,6 +44,7 @@ DIRECTION_MAP = {
 
 class GameObject:
     """Игровой объект."""
+
     def __init__(self, position=CENTER_OF_SCREEN, body_color=None):
         self.position = position
         self.body_color = body_color
@@ -61,6 +62,7 @@ class GameObject:
 
 class Apple(GameObject):
     """Предмет, который змейка может съесть."""
+
     def __init__(self, snake_positions):
         super().__init__(body_color=APPLE_COLOR)
         self.randomize_position(snake_positions)
@@ -83,6 +85,7 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Змейка в игре."""
+
     def __init__(self):
         super().__init__(body_color=SNAKE_COLOR)
         self.reset()
@@ -132,6 +135,8 @@ def handle_keys(snake):
             pygame.quit()
             raise SystemExit
         elif event.type == pygame.KEYDOWN:
+            # Используем текущее направление как значение по умолчанию,
+            # чтобы избежать лишних проверок.
             new_direction = DIRECTION_MAP.get(event.key, snake.direction)
             snake.update_direction(new_direction)
 
@@ -152,13 +157,13 @@ def main():
             snake.length += 1
             apple.randomize_position(snake.positions)
 
-        # Проверка столкновения с собой: только если длина > 1 и голова в теле
+        # Проверка столкновения с собой: только если длина > 1 и голова в теле.
         if snake.length > 1 and head_position in snake.positions[1:]:
-            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше
+            screen.fill(BOARD_BACKGROUND_COLOR)  # Закрашиваем доску при проигрыше.
             snake.reset()
             apple.randomize_position(snake.positions)
 
-        screen.fill(BOARD_BACKGROUND_COLOR)  # Очистка экрана каждый кадр
+        screen.fill(BOARD_BACKGROUND_COLOR)  # Очистка экрана каждый кадр.
         apple.draw()
         snake.draw()
         pygame.display.update()
