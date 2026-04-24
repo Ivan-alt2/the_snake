@@ -185,7 +185,9 @@ def main():
 
         elif head == wrong_apple.position:
             snake.get_wrong_apple()
-            wrong_apple.position = wrong_apple.randomize_position(snake.positions)
+            wrong_apple.position = wrong_apple.randomize_position(
+                snake.positions
+            )
             if snake.length >= 3:
                 snake.length -= 1
 
